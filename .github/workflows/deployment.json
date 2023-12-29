@@ -1,0 +1,221 @@
+{
+    "version": "1.0",
+    "files": [
+        {
+            "path": "policies/user-info-endpoint/policy/UserInfo_TrustFrameworkExtensions.xml",
+            "replacements": [
+                {
+                    "find": "<Item Key=\"issuer\">https://yourtenant.b2clogin.com/00000000-0000-0000-0000-000000000000/v2.0/</Item>",
+                    "replace": "<Item Key=\"issuer\">https://b2clivedemo.b2clogin.com/3a29c594-12be-476f-bb6f-0a787b348639/v2.0/</Item>"
+                }
+            ]
+        },
+        {
+            "path": "policies/refresh-token-journey/policy/TrustFrameworkExtensions_RefreshTokenJourney.xml"
+        },
+        {
+            "path": "policies/refresh-token-journey/policy/SignUpOrSignIn_RefreshTokenJourney_WithAADCommon.xml",
+            "replacements": [
+                {
+                    "find": "<Item Key=\"client_id\">00000000-0000-0000-0000-000000000000</Item>",
+                    "replace": "<Item Key=\"client_id\">1d1306cb-40c9-4579-a87d-bb773c1d1ffe</Item>" 
+                }
+            ]
+        },
+        {
+            "path": "policies/user-info-endpoint/policy/UserInfo_SignUpOrSignin.xml"
+        },
+        {
+            "path": "policies/ab-testing/policy/TrustFrameworkExtensions_WithAbTesting.xml"
+        },
+        {
+            "path": "policies/ab-testing/policy/SignUpOrSigninWithAbTesting.xml"
+        },
+        {
+            "path": "policies/restore-mfa-phone-number/policy/TrustFrameworkExtensions_RestorePhoneNumber.xml"
+        },
+        {
+            "path": "policies/restore-mfa-phone-number/policy/RestorePhoneNumber.xml"
+        },
+        {
+            "path": "policies/embedded-password-reset/policy/TrustFrameworkExtensions_SSPR.xml"
+        },
+        {
+            "path": "policies/embedded-password-reset/policy/SignUpOrSigninCustom_SSPR.xml"
+        },
+        {
+            "path": "policies/password-reset-only/policy/TrustFrameworkExtensions.xml"
+        },
+        {
+            "path": "policies/password-reset-only/policy/PasswordReset.xml"
+        },
+        {
+            "path": "policies/password-reset-not-last-password/policy/TrustFrameworkExtensions.xml"
+        },
+        {
+            "path": "policies/password-reset-not-last-password/policy/PasswordReset.xml"
+        },
+        {
+            "path": "policies/banned-password-list-no-API/policy/TrustFrameworkExtensions.xml"
+        },
+        {
+            "path": "policies/banned-password-list-no-API/policy/PasswordReset.xml"
+        },
+        {
+            "path": "policies/banned-password-list-no-API/policy/SignUpOrSignin.xml"
+        },
+        {
+            "path": "policies/pwd-reset-email-exists/policy/TrustFrameworkExtensions_PasswordResetAccountExists.xml"
+        },
+        {
+            "path": "policies/pwd-reset-email-exists/policy/PasswordReset_AccountExists.xml"
+        },
+        {
+            "path": "policies/pwd-reset-via-email-or-phone/policy/TrustFrameworkExtensions_EmailOrPhone.xml"
+        },
+        {
+            "path": "policies/pwd-reset-via-email-or-phone/policy/SignUpOrSignin_EmailOrPhone.xml",
+            "replacements": [
+                {
+                    "find": "\"SignUpOrSignIn\"",
+                    "replace": "\"SignUpOrSignInWithMfa\""
+                }
+            ]
+        },
+        {
+            "path": "policies/pwd-reset-via-email-or-phone/policy/PasswordReset_EmailOrPhone.xml"
+        },
+        {
+            "path": "policies/dynamic-sign-up-sign-in/policy/SignUpOrSignIn_Dynamic.xml"
+        },
+        {
+            "path": "policies/split-email-verification-and-signup/policy/SignUpOrSignIn_SplitEmailVerificationAndSignUp.xml"
+        },
+        {
+            "path": "policies/username-or-email/policy/TrustFrameworkExtensions_UsernameOrEmail.xml"
+        },
+        {
+            "path": "policies/username-or-email/policy/PasswordReset_UsernameOrEmail.xml"
+        },
+        {
+            "path": "policies/username-or-email/policy/ProfileEdit_UsernameOrEmail.xml"
+        },
+        {
+            "path": "policies/username-or-email/policy/SignIn_UsernameOrEmail.xml"
+        },
+        {
+            "path": "policies/username-or-email/policy/SignUp_UsernameOrEmail.xml"
+        },
+        {
+            "path": "policies/change-sign-in-name/policy/TrustFrameworkExtensions_ChangeSignInName.xml"
+        },
+        {
+            "path": "policies/change-sign-in-name/policy/ChangeSignInName.xml"
+        },
+        {
+            "path": "policies/username-signup-or-signin/policy/TrustFrameworkExtensions_Username.xml"
+        },
+        {
+            "path": "policies/username-signup-or-signin/policy/SignUpOrSignin_Username.xml"
+        },
+        {
+            "path": "policies/username-signup-or-signin/policy/ProfileEdit_Username.xml"
+        },
+        {
+            "path": "policies/username-signup-or-signin/policy/PasswordReset_Username.xml"
+        },
+        {
+            "path": "policies/delete-my-account/policy/DeleteMyAccount.xml"
+        },
+        {
+            "path": "policies/totp/policy/TrustFrameworkExtensions_TOTP.xml"
+        },
+        {
+            "path": "policies/totp/policy/TrustFrameworkExtensions_TOTPMigration.xml"
+        },
+        {
+            "path": "policies/totp/policy/SignUpOrSignIn_TOTP.xml"
+        },
+        {
+            "path": "policies/totp/policy/PasswordReset_TOTP.xml"
+        },
+        {
+            "path": "policies/edit-mfa-phone-number/policy/TrustFrameworkExtensions_EditPhoneNumber.xml"
+        },
+        {
+            "path": "policies/edit-mfa-phone-number/policy/ProfileEdit_PhoneNumber.xml"
+        },
+        {
+            "path": "policies/signin-email-verification/policy/TrustFrameworkExtensions_EmailMFA.xml"
+        },
+        {
+            "path": "policies/signin-email-verification/policy/SignUpOrSignIn_EmailMFA.xml"
+        },
+        {
+            "path": "policies/mfa-email-or-phone/policy/SignUpOrSignin_PhoneOrEmailMFA.xml"
+        },
+        {
+            "path": "policies/mfa-add-secondarymfa/policy/TrustFrameworkExtensions_SecondaryPhone.xml"
+        },
+        {
+            "path": "policies/mfa-add-secondarymfa/policy/SignUpOrSignIn_SecondaryPhone.xml"
+        },
+        {
+            "path": "policies/conditional-access/policy/TrustFrameworkExtensions_ConditionalAccess.xml"
+        },
+        {
+            "path": "policies/conditional-access/policy/SignUpOrSignin_ConditionalAccess.xml"
+        },
+        {
+            "path": "policies/conditional-access/policy/SignUpOrSigninWith_ConditionalAccess_WhatIf.xml"
+        },
+        {
+            "path": "policies/allow-list-applications/policy/SignUpOrSignin_AppAllowList.xml"
+        },
+        {
+            "path": "policies/social-idp-force-email/policy/TrustFrameworkExtensions_FederationForceEmail.xml"
+        },
+        {
+            "path": "policies/social-idp-force-email/policy/SignUpOrSignin_FederationForceEmail.xml"
+        },
+        {
+            "path": "policies/sign-in-sign-up-versioned-tou/policy/TrustFrameworkExtensions_TOU.xml"
+        },
+        {
+            "path": "policies/sign-in-sign-up-versioned-tou/policy/SignUpSignIn_TOU.xml"
+        },
+        {
+            "path": "policies/sign-in-sign-up-versioned-tou/policy/PasswordReset_TOU.xml"
+        },
+        {
+            "path": "policies/sign-up-deep-link/policy/TrustFrameworkExtensions_DeepLink.xml"
+        },
+        {
+            "path": "policies/sign-up-deep-link/policy/SignUpOrSignIn_DeepLink.xml"
+        },
+        {
+            "path": "policies/sign-up-domain-allowlist/policy/SignUpOrSignin_DomainAllowlist.xml"
+        }, 
+        {
+            "path": "policies/force-password-reset/policy/TrustFrameworkExtensions_ForcePasswordReset.xml"
+        }, 
+        {
+            "path": "policies/force-password-reset/policy/SignUpOrSignin_ForcePasswordReset.xml"
+        }, 
+        {
+            "path": "policies/force-password-reset/policy/SignUpOrSignin_ForcePasswordReset_Helper.xml"
+        }, 
+        {
+            "path": "policies/age-gating/policy/TrustFrameworkAgeGatingExtensions.xml"
+        }, 
+        {
+            "path": "policies/age-gating/policy/SignUpOrSignIn.xml"
+        }, 
+        {
+            "path": "policies/age-gating/policy/ProfileEdit.xml"
+        }, 
+        {
+            "path": "policies/age-gating/policy/PasswordReset.xml"
+        }
+    ]
+}

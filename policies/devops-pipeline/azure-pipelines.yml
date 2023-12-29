@@ -1,0 +1,20 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - script: |
+      curl https://raw.githubusercontent.com/judedaryl/go-ieftool/main/install.sh | bash
+    displayName: 'Install IEF Tool'
+
+  - script: ieftool deploy ./policy
+    displayName: 'Uploading IEF policies'
+    env:
+      B2C_TENANT_ID: __TENANT_ID__
+      B2C_CLIENT_ID: __CLIENT_ID__
+      B2C_CLIENT_SECRET: __CLIENT_SECRET__

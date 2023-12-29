@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TrustFrameworkPolicy 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
+  PolicySchemaVersion="0.3.0.0" 
+  TenantId="yourtenant.onmicrosoft.com" 
+  PolicyId="B2C_1A_ForcePasswordReset_TrustFrameworkExtensions" 
+  PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_ForcePasswordReset_TrustFrameworkExtensions">
+
+  <BasePolicy>
+    <TenantId>yourtenant.onmicrosoft.com</TenantId>
+    <PolicyId>B2C_1A_TrustFrameworkExtensions</PolicyId>
+   </BasePolicy>
+  <BuildingBlocks>
+    <ClaimsSchema>
+      <!--Sample: The system current date and time-->
+      <ClaimType Id="currentDateTime">
+        <DisplayName>Current date and time</DisplayName>
+        <DataType>dateTime</DataType>
+        <UserHelpText>Current date and time</UserHelpText>
+      </ClaimType>
+
+      <!--Sample: The last time user reset the password-->
+      <ClaimType Id="extension_passwordResetOn">
+        <DisplayName>Password reset on</DisplayName>
+        <DataType>dateTime</DataType>
+        <UserHelpText>The last time user reset the password</UserHelpText>
+      </ClaimType>
+
+      <!--Sample: Indicates whether password reset is required, based on date comparison -->
+      <ClaimType Id="isPasswordResetOnGreaterThanNow">
+        <DisplayName>Indicates whether password reset is required</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+
+      <!--Sample: Indicates whether password reset exists -->
+      <ClaimType Id="isPasswordResetOnPresent">
+        <DisplayName>Is password reset on presented</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+
+      <!--Sample: Indicates whether password reset is required or not, based on date comparison and if extension_passwordResetOn is null -->
+      <ClaimType Id="skipPasswordReset">
+        <DisplayName>Skip password reset</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>   
+    </ClaimsSchema>
+
+    <ClaimsTransformations>
+      <!--Sample: Set the current UTC date and time to extension_passwordResetOn claim type-->
+      <ClaimsTransformation Id="SetPasswordResetOn" TransformationMethod="GetCurrentDateTime">
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="extension_passwordResetOn" TransformationClaimType="currentDateTime" />
+        </OutputClaims>
+      </ClaimsTransformation>
+
+      <!--Sample: Set the current UTC date and time to currentDateTime claim type-->
+      <ClaimsTransformation Id="SetCurrentDateTime" TransformationMethod="GetCurrentDateTime">
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="currentDateTime" TransformationClaimType="currentDateTime" />
+        </OutputClaims>
+      </ClaimsTransformation>
+
+      <!--Sample: Compare the dates and check if password reset is required -->
+      <ClaimsTransformation Id="ComparePasswordResetOnWithCurrentDateTime" TransformationMethod="DateTimeComparison">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="currentDateTime" TransformationClaimType="firstDateTime" />
+          <InputClaim ClaimTypeReferenceId="extension_passwordResetOn" TransformationClaimType="secondDateTime" />
+        </InputClaims>
+        <InputParameters>
+          <!--Sample: We check if the first date (current) minus 90 day is later than second date (password reset on).
+          If yes, it means that at least 90 days passed from the time user reset the password.
+          Note: the first date must contain a value. So, we use the current datetime. Don't change the order --> 
+          <InputParameter Id="operator" DataType="string" Value="earlier than" />
+          <!--Deom Action Required: Change the time span according to 60 or 90 days (in seconds)-->
+          <InputParameter Id="timeSpanInSeconds" DataType="int" Value="-80" />
+        </InputParameters>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="isPasswordResetOnGreaterThanNow" TransformationClaimType="result" />
+        </OutputClaims>      
+      </ClaimsTransformation>  
+
+      <!--Sample: Check if extension_passwordResetOn is existed in user account. -->
+      <ClaimsTransformation Id="CheckIfPasswordResetOnPresent" TransformationMethod="DoesClaimExist">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="extension_passwordResetOn" TransformationClaimType="inputClaim" />
+        </InputClaims>					
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="isPasswordResetOnPresent" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+
+      <!--Sample: Check if datetime comparison is true and also the PasswordResetOn is presented in the user account.
+      If both of them are true, user doesn't need to reset the password--> 
+      <ClaimsTransformation Id="CheckWhetherPasswordResetCanBeSkipped" TransformationMethod="AndClaims">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="isPasswordResetOnGreaterThanNow" TransformationClaimType="inputClaim1" />
+          <InputClaim ClaimTypeReferenceId="isPasswordResetOnPresent" TransformationClaimType="inputClaim2" />
+        </InputClaims>					
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="skipPasswordReset" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+    </ClaimsTransformations>
+  </BuildingBlocks>
+
+  <ClaimsProviders>
+    <ClaimsProvider>
+      <DisplayName>Azure Active Directory</DisplayName>
+      <TechnicalProfiles>  
+        <TechnicalProfile Id="AAD-UserReadUsingObjectId">
+          <OutputClaims>
+            <!--Sample: Read the 'password reset on' extension attribute -->
+            <OutputClaim ClaimTypeReferenceId="extension_passwordResetOn" />
+          </OutputClaims>
+            <OutputClaimsTransformations>
+            <OutputClaimsTransformation ReferenceId="SetCurrentDateTime" />
+            <OutputClaimsTransformation ReferenceId="ComparePasswordResetOnWithCurrentDateTime" />
+            <OutputClaimsTransformation ReferenceId="CheckIfPasswordResetOnPresent" />
+            <OutputClaimsTransformation ReferenceId="CheckWhetherPasswordResetCanBeSkipped" />
+          </OutputClaimsTransformations>            
+        </TechnicalProfile>
+
+        <TechnicalProfile Id="AAD-UserWriteUsingLogonEmail">
+          <InputClaimsTransformations>
+            <!--Sample: Get current date and time -->
+            <InputClaimsTransformation ReferenceId="SetPasswordResetOn" />
+          </InputClaimsTransformations>
+          <PersistedClaims>
+            <!--Sample: On sign-up, set the 'password reset on' extension attribute with the current date and time -->
+            <PersistedClaim ClaimTypeReferenceId="extension_passwordResetOn" />
+          </PersistedClaims>
+        </TechnicalProfile>
+
+        <TechnicalProfile Id="AAD-UserWritePasswordUsingObjectId">
+          <InputClaimsTransformations>
+           <!--Sample: Get current date and time -->
+           <InputClaimsTransformation ReferenceId="SetPasswordResetOn" />
+          </InputClaimsTransformations>
+          <PersistedClaims>
+            <!--Sample: On sign-up, set the 'password reset on' extension attribute with the current date and time -->
+            <PersistedClaim ClaimTypeReferenceId="extension_passwordResetOn" />
+          </PersistedClaims>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+  </ClaimsProviders>
+
+  <UserJourneys>
+    <UserJourney Id="SignUpOrSignInWithForcePasswordReset">
+      <OrchestrationSteps>
+        <OrchestrationStep Order="1" Type="CombinedSignInAndSignUp" ContentDefinitionReferenceId="api.signuporsignin">
+          <ClaimsProviderSelections>
+            <ClaimsProviderSelection ValidationClaimsExchangeId="LocalAccountSigninEmailExchange" />
+          </ClaimsProviderSelections>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="LocalAccountSigninEmailExchange" TechnicalProfileReferenceId="SelfAsserted-LocalAccountSignin-Email" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+
+        <!-- Check if the user has selected to sign in using one of the social providers -->
+        <OrchestrationStep Order="2" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+              <Value>objectId</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SignUpWithLogonEmailExchange" TechnicalProfileReferenceId="LocalAccountSignUpWithLogonEmail" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+
+        <!-- This step reads any user attributes that we may not have received when authenticating using ESTS so they can be sent 
+        in the token. -->
+        <OrchestrationStep Order="3" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>authenticationSource</Value>
+              <Value>socialIdpAuthentication</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AADUserReadWithObjectId" TechnicalProfileReferenceId="AAD-UserReadUsingObjectId" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+
+        <!--Demo: check if change password is required. If yes, ask the user to reset the password-->
+        <OrchestrationStep Order="4" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>authenticationSource</Value>
+              <Value>socialIdpAuthentication</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>skipPasswordReset</Value>
+              <Value>True</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>            
+          </Preconditions>        
+          <ClaimsExchanges>
+            <ClaimsExchange Id="NewCredentials" TechnicalProfileReferenceId="LocalAccountWritePasswordUsingObjectId" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+
+        <OrchestrationStep Order="5" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
+
+        </OrchestrationSteps>
+      <ClientDefinition ReferenceId="DefaultWeb" />
+    </UserJourney>
+  </UserJourneys>
+</TrustFrameworkPolicy>
