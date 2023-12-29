@@ -1,5 +1,7 @@
 # Azure Active Directory B2C: Custom CIAM User Journeys
 
+This is actually copied from [azure-ad-b2c/samples](https://github.com/azure-ad-b2c/samples) with an added [License](LICENSE).
+
 In this repo, you will find samples for several enhanced Azure AD B2C Custom CIAM User Journeys.
 
 ## Getting started
